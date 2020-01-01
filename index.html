@@ -1,0 +1,121 @@
+<div id="root"></div>
+<script src="./node_modules/react/umd/react.development.js"></script>
+<script src="./node_modules/react-dom/umd/react-dom.development.js"></script>
+<script src="./node_modules/prop-types/prop-types.js"></script>
+<script src="./node_modules/babel-standalone/babel.js"></script>
+<script type = "text/javascript">
+const rootElement = document.getElementById('root')
+
+//normal javascript
+const element = document.createElement('div')
+element.textContent = 'Normal Hello Wordd'
+element.className = 'container'
+rootElement.appendChild(element)
+
+//react style and need to add library react and react-dom
+const element2 = React.createElement(
+    'div',
+    {className: 'container',
+    children: ["This is child"]
+    }
+    // ,
+    // 'Hello Way',
+    // 'Good bye'
+)
+console.log(element2)
+ReactDOM.render(element2, rootElement)
+</script>
+<script type="text/babel">
+//add babel standalone
+const rootElement2 = document.getElementById('root')
+const element3 = <div className="container">Hello World</div>
+
+//using variable
+const content = "Hello Worrrrld"
+const myClassName = 'container'
+const element4 = <div className="container">{content} </div>
+const element5 = <div className={myClassName +'_hi'}>{(()=>content)()} </div>
+
+//using props
+const props = {
+    className: 'contaier',
+    children: 'Hello World props',
+}
+const element6 = <div {...props}/>
+//not override props
+const element7 = <div className="myClass" {...props} />
+//override props
+const element8 = <div  {...props} className="myClass"/>
+const element9 = <div  {...props} children="Ho HO ha ha"/>
+
+//component reusable
+const helloWorld = <div> Duplicate One </div>
+const element10 = (
+    <div className= "container">
+        {helloWorld}
+        {helloWorld}
+    </div>
+)
+
+//javascript reuse use function-> call function
+const message = (props) => <div>{props.msg}</div>
+const Message = (props) => <div>{props.msg}</div>
+const Message2 = (props) => <div>{props.children}</div>
+const element11 = (
+    <div className= "container">
+        <message />
+        <Message msg="Another big babel one"/>
+        <Message2>Hello Message2
+            <Message2> Another Sub Message2</Message2>
+        </Message2>
+        {React.createElement(message,{msg: "Another World are"})}
+        {message({msg: "Hello World are"})}
+        {message({msg: "Good day world are"})}
+    </div>
+)
+ReactDOM.render(element11, rootElement2)
+
+//validation with propType
+function SayHello(props) {
+    return (
+        <div>
+        Hello {props.firstName}{' '}{props.lastName|| 'Unkown'} !
+        </div>
+    )
+}
+
+//not add props-type library yet.
+// const PropTypes = {
+//     string(props, propName, componentName) {
+//         if(typeof props[propName] !== 'string') {
+//             return new Error(
+//                 `Hay, you should pass a string for ${propName} in ${componentName} but you passed a ${typeof props[propName]} !`
+//             )
+//         }
+//     }
+// }
+SayHello.propTypes = {
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+}
+
+//PropTypes in class turn static properties
+class SayHello1 extends React.Component {
+    static propTypes = {
+        firstName: PropTypes.string.isRequired,
+        lastName: PropTypes.string.isRequired,
+    }
+        render() {
+        const {firstName1,lastName1} = this.props
+        return (
+            <div>
+                Hello {firstName1} {lastName1} !
+            </div>
+        )
+    }
+}
+ReactDOM.render(
+    <SayHello1 firstName1={true} />,
+    document.getElementById('root')
+)
+</script>

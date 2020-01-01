@@ -1,0 +1,12 @@
+{
+  "name": "egghead.io_begineer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "babel-standalone": "^6.26.0",
+    "props-type": "^1.0.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  }
+}
