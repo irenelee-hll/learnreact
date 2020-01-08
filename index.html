@@ -99,7 +99,7 @@ SayHello.propTypes = {
     lastName: PropTypes.string.isRequired,
 }
 
-//PropTypes in class turn static properties
+//PropTypes in class turn static propertiesw
 class SayHello1 extends React.Component {
     static propTypes = {
         firstName: PropTypes.string.isRequired,
@@ -118,4 +118,216 @@ ReactDOM.render(
     <SayHello1 firstName1={true} />,
     document.getElementById('root')
 )
+
+function Message3({message}) {
+// if(!message) {
+//     return <div>No message</div>
+// }
+//  return React.createElement('div',null, message);
+
+ return(<div>
+        {
+            message ? (<div>{message}</div>):(<div>No message</div>)
+        }
+        </div>
+    )
+}
+
+ReactDOM.render(<Message3 message={"YEs"}/>,
+document.getElementById('root'))
+
+//time
+const rootElement3 = document.getElementById('root')
+const time = new Date().toLocaleTimeString()
+const element12 = <div>It is {time}</div>
+ReactDOM.render(element12, rootElement3)
+
+//function
+function tick() {
+    const time = new Date().toLocaleTimeString()
+    const element13 = <div>It is <input value={time}/><input value={time}/></div>
+    ReactDOM.render(element13, rootElement3)
+    const element14 = `<div>It is <input value="${time}"/><input value="${time}"/></div>`
+    rootElement3.innerHTML = element14
+}
+
+// tick()
+//setInterval(tick,1000)
+
+const element15 = (<div> <div className="box" style={{paddingleft: 20}}>box</div></div>)
+// const class= 'box'
+const className= 'box'
+const props2 = {
+    // class,
+    className,
+    style: {paddingLeft: 20},
+}
+const element16 = (<div> <div {...props2}>box</div></div>)
+
+const props3 = {
+    class: 'box',
+    style: {paddingLeft: 20},
+}
+const element17 = (<div> <div {...props3}>box</div></div>)
+
+function Box(props) {
+    return (
+        <div className="box"
+            style={{paddingLeft:20}}
+            {...props}
+            />
+    )
+}
+const element18 = <div><Box style={{backgroundColor: 'lightblue'}}>small box</Box></div>
+
+function Box2({style,size,className='', ...rest}) {
+    const sizeClassName = size? `box--${size}`:''
+    return (
+        <div className={`box ${className} ${sizeClassName}`}
+            style={{paddingLeft:20, ...style}}
+            {...rest}
+            />
+    )
+}
+const element19 = <div><Box2 size="small" style={{backgroundColor: 'lightblue'}}>xxsmall box</Box2></div>
+ReactDOM.render(element19, document.getElementById('root'))
+
+//event handler
+const state = {eventCounter:0, username: ''}
+
+function App() {
+    return (
+        <div>
+            <p>There have been {state.eventCounter} events</p>
+            <p><button onClick={()=>setState({eventCounter:state.eventCounter +1})}>+</button></p>
+            <p><button onClick={increment}>+</button></p>
+            <p> You typed: {state.username}</p>
+            <p> <input onChange={event => setState({username: event.target.value,})}/></p>
+            <p> <input onChange={updateUsername}/></p>
+        </div>
+    )
+}
+// setState({eventCounter:10})
+function increment() {
+    setState({eventCounter:state.eventCounter +1})
+}
+function updateUsername(event) {
+    setState({username: event.target.value,})
+}
+function setState(newState) {
+    Object.assign(state,newState)
+    renderApp()
+}
+
+function renderApp(){
+    ReactDOM.render(
+        <App/>, document.getElementById('root'),
+    )
+}
+renderApp();
+class StopWatch extends React.Component{
+    state = {lapse:0, running:false}
+    handleRunClick= () =>{
+        ////step 1
+        // this.setState({lapse:10,running:true})
+        // //step2
+        // const startTime = Date.now() - this.state.lapse
+        // setInterval(()=>{this.setState({lapse: Date.now() - startTime})
+        // })
+        // this.setState({running:true})
+        this.setState(state=> {
+            if(state.running) {
+                clearInterval(this.timer)
+            } else {
+                const startTime = Date.now() - this.state.lapse
+                this.timer = setInterval(() => {
+                    this.setState({
+                        lapse: Date.now() - startTime,
+                    })
+                })
+            }
+            return{ running: !state.running}
+        })
+    }
+    handleRunClear = () => {
+        clearInterval(this.timer)
+        this.setState({lapse: 0 , running: false})
+    }
+    componentWillUnmount() {
+        clearInterval(this.timer) 
+    }
+    render() {
+        // const {lapse, running} = this.props
+        const {lapse, running} = this.state
+        return(
+        <div>
+            <label> {lapse}ms</label>
+            <button onClick={this.handleRunClick}>{running? 'Stop' : 'Start'}</button>
+            <button onClick={this.handleRunClear}>clear</button>
+        </div>
+    )
+    }
+}
+// function StopWatch({lapse,running}) {
+//     return(
+//         <div>
+//             <label> {lapse}ms</label>
+//             <button>{running? 'Stop' : 'Start'}</button>
+//             <button>clear</button>
+//         </div>
+//     )
+// }
+
+const element21 = <StopWatch running={false} lapse={10}/>
+const element20 = <StopWatch />
+ReactDOM.render(element20, document.getElementById('root'))
+
+class Counter extends React.Component {
+    state = {count: 0}
+    // //handleClick = this.handleClick.bind(this)
+    // constructor(...args){
+    //     super(...args)
+    //     this.state = {count: 0}
+    //     this.handleClick = this.handleClick.bind(this)
+    // }
+    // // handleClick() {
+    // // //handleClick = function() {
+    handleClick = () => {
+        this.setState(({count}) => ({count: count+1,}))
+    }
+    // // //}.bind(this)
+    render() {
+        return(
+            <div>
+            <button onClick={() => this.setState(({count}) => ({count: count+1,}))}>
+                {this.state.count}
+            </button>
+            <button onClick={this.handleClick.bind(this)}>
+                {this.state.count}
+            </button>
+            <button onClick={this.handleClick}>
+                {this.state.count}
+            </button>
+            </div>
+        )
+    }
+}
+const element22 = <Counter />
+ReactDOM.render(element22, document.getElementById('root'))
 </script>
+
+<!-- for why bind is needed.
+    var bob = {
+    name: 'Bob',
+    greet(name) {
+        return `hi ${name}, my name is ${this.name} !`
+    }
+}
+
+bob.greet('Jane') // hi jane, my name is bob
+
+var greenFn = bob.greet
+greenFn('jane') //hi jane, my name is 
+
+var greenFn = bob.greet.bind(bob) 
+greenFn('jane')//hi jane, my name is bob -->

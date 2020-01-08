@@ -1,0 +1,46 @@
+<div id="root"></div>
+<script src="./node_modules/react/umd/react.development.js"></script>
+<script src="./node_modules/react-dom/umd/react-dom.development.js"></script>
+<script src="./node_modules/prop-types/prop-types.js"></script>
+<script src="./node_modules/babel-standalone/babel.js"></script>
+<script src="./node_modules/axios/dist/axios.min.js"></script>
+<script type="text/babel">
+class UserCompany extends React.Component{
+    state = {company: undefined, loaded: false}
+    componentDidMount() {
+        axios({
+            url: 'https://api.github.com/graphql',
+            method: 'post',
+            data: {
+                query: `{
+                    user(login: "${this.props.username}") {
+                        company
+                    }
+                }`,
+            },
+            headers: {Authorization: `bearer 7b597e64cad8c1a314c4763d6d86b72db2aea8ce`}
+        }).then(response =>{
+            this.setState({company: response.data.data.user.company,loaded: true})
+        },error => {
+            this.setState({
+                error,
+                loaded:true,
+            })
+        })
+    }
+    render() {
+        return this.state.loaded? this.state.company || 'unknown' : '...'
+    }
+}
+// const username = 'kentcdodds'
+const username = 'mzabriskie'
+const elemnt = (
+    <div>
+        <div>
+            {`@${username} works at `}
+            <UserCompany username={username}/>
+        </div>
+    </div>
+)
+ReactDOM.render(elemnt,document.getElementById('root'))
+</script>
