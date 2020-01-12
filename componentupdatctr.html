@@ -1,0 +1,38 @@
+<div id="root"></div>
+<script src="./node_modules/react/umd/react.development.js"></script>
+<script src="./node_modules/react-dom/umd/react-dom.development.js"></script>
+<script src="./node_modules/babel-standalone/babel.js"></script>
+<script src="./node_modules/prop-types/prop-types.js"></script>
+<script type = "text/babel">
+class App extends React.Component {
+    constructor(){
+        super();
+        this.state = {increasing: false}
+    }
+    update(){
+        ReactDOM.render(
+            <App val={this.props.val+1} />,
+            document.getElementById('root')
+        )
+    }
+    componentWillReceiveProps(nextProps) {
+        this.setState({increasing: nextProps.val > this.props.val})
+    }
+    shouldComponentUpdate(nextProps,nextState) {
+        return nextProps.val %5 ===0;
+    }
+    render() {
+        console.log(this.state.increasing)
+        return(
+            <button onClick={this.update.bind(this)}>
+                {this.props.val}
+            </button>
+        )
+    }
+    componentDidUpdate(prevProps,prevState) {
+        console.log(`prevProps: ${prevProps.val}`)
+    }
+}
+App.defaultProps= {val:0}
+ReactDOM.render(<App />, document.getElementById('root'))
+</script>

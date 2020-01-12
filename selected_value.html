@@ -1,0 +1,49 @@
+<div id="root"></div>
+<script src="./node_modules/react/umd/react.development.js"></script>
+<script src="./node_modules/react-dom/umd/react-dom.development.js"></script>
+<script src="./node_modules/babel-standalone/babel.js"></script>
+<script type = "text/babel">
+class App extends React.Component {
+    render() {
+        return(
+            <Buttons>
+                <button value="A">A</button>
+                <button value="B">B</button>
+                <button value="C">C</button>
+            </Buttons>
+        )
+    }
+}
+
+class Buttons extends React.Component{
+    constructor() {
+        super();
+        this.state = {selected:'None'}
+    }
+    selectItem(selected) {
+        this.setState({selected})
+    }
+    render() {
+        // let items = this.props.children.map(child=>child)
+        // // if left out only one childrend it will show error.
+        // console.log(items) // show 3 button array
+        // let items = React.Children.map(this.props.children, child=>child) // it solve one array of children
+        // let items = React.Children.forEach(this.props.children, child=>console.log(child.props.className)) // it solve one array of children
+        // let items = React.Children.toArray(this.props.children)// sove both array 1 or multi
+        // let items = this.props.children; //no change vaule
+        // let items = React.Children.only(this.props.children)// more than one it show errors
+        let fn = child =>
+            React.cloneElement(child,{
+                onClick: this.selectItem.bind(this,child.props.value)
+            })
+        let items = React.Children.map(this.props.children,fn);
+        return(
+            <div>
+                <h2> You have selected: {this.state.selected}</h2>
+                {items}
+            </div>
+        )
+    }
+}
+ReactDOM.render(<App />, document.getElementById('root'))
+</script>

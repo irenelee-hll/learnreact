@@ -1,0 +1,40 @@
+<div id="root"></div>
+<script src="./node_modules/react/umd/react.development.js"></script>
+<script src="./node_modules/react-dom/umd/react-dom.development.js"></script>
+<script src="./node_modules/babel-standalone/babel.js"></script>
+<script src="./node_modules/prop-types/prop-types.js"></script>
+<script type = "text/babel">
+class App extends React.Component{
+    constructor() {
+        super();
+        this.state={items:[]}
+    }
+    componentWillMount() {
+        fetch('https://swapi.co/api/people/?format=json')
+        .then(response=>response.json())
+        .then(({results: items}) => this.setState({items}))
+    }
+    filter(e){
+        this.setState({filter: e.target.value})
+    }
+    render(){
+        let items = this.state.items
+        if(this.state.filter) {
+            items = items.filter(item =>
+            item.name.toLowerCase()
+            .includes(this.state.filter.toLowerCase()))
+        }
+        return(
+            <div>
+                <input type="text" onChange={this.filter.bind(this)} />
+               {
+                //items.map(item => <h4 key={item.name}>{item.name}</h4>)
+                }
+                {items.map(item => <Person key={item.name} person={item}/>)}
+            </div>
+        )
+    }
+}
+const Person = (props) => <h4>{props.person.name}</h4>
+ReactDOM.render(<App />, document.getElementById('root'))
+</script>

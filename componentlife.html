@@ -1,0 +1,53 @@
+<div id="root"></div>
+<script src="./node_modules/react/umd/react.development.js"></script>
+<script src="./node_modules/react-dom/umd/react-dom.development.js"></script>
+<script src="./node_modules/babel-standalone/babel.js"></script>
+<script src="./node_modules/prop-types/prop-types.js"></script>
+<script type = "text/babel">
+class App extends React.Component{
+    constructor() {
+        super();
+        this.state = {val:0}
+        this.update = this.update.bind(this)
+    }
+    update() {
+        this.setState({val:this.state.val +1})
+    }
+    componentWillMount() {
+        console.log('componentWillMount');
+        this.setState({m:2})
+    }
+    
+    render(){
+        return <button onClick={this.update}>{this.state.val * this.state.m}</button>
+    }
+    componentDidMount(){
+        console.log('componentDidMount')
+        console.log(ReactDOM.findDOMNode(this))
+        this.inc = setInterval(this.update,500) /// no clean yet
+    }
+    componentWillUnmount(){
+        console.log('componentWillUnmount')
+       clearInterval(this.inc)
+    }
+
+}
+class Wrapper extends React.Component{
+    mount() {
+        ReactDOM.render(<App/>, document.getElementById('a'))
+    }
+    unmount(){
+        ReactDOM.unmountComponentAtNode(document.getElementById('a'))
+    }
+    render() {
+        return(
+            <div>
+                <button onClick={this.mount.bind(this)}>Mount</button>
+                <button onClick={this.unmount.bind(this)}>Unmount</button>
+                <div id="a"></div>
+            </div>
+        )
+    }
+}
+ReactDOM.render(<Wrapper />, document.getElementById('root'))
+</script>
